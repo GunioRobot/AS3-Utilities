@@ -1,4 +1,4 @@
-package AStar{
+package astar{
 	import Utils;
 	import flash.events.Event;
 	import flash.display.Sprite;

@@ -1,4 +1,4 @@
-package AStar{
+package astar{
 	import flash.events.Event;
 	import flash.display.MovieClip;
 	import flash.events.MouseEvent;

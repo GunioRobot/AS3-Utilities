@@ -1,4 +1,4 @@
-package{
+package common{
 	public class Utils{
                 /*
                 * copy properties of obj2 into obj1 for all properties of obj2 not existing in obj1
