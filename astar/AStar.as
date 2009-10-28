@@ -3,7 +3,9 @@ package astar{
 	import flash.display.MovieClip;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
-	import AStarNode;
+
+	import common.Utils;
+	import astar.AStarNode;
 
 	public class AStar extends MovieClip{
 
@@ -11,7 +13,7 @@ package astar{
 
 		public var nodes:Array; // 1d array of nodes
 		public var node_grid:Array; // 2d array of nodes
-		public const node_size:Number = 20;
+		public const node_size:Number = 10;
 
 		private	var cols:Number;
 		private var rows:Number;
@@ -65,7 +67,7 @@ package astar{
 			var num_obstacles:Number = int(Math.random()*10+10)
 			var min_nodes_per:Number = 10;
 			var max_nodes_per:Number = 20;
-			for(var i:Number = 0; i < -1/* num_obstacles*/; i++){
+			for(var i:Number = 0; i < num_obstacles; i++){
 				x = int(Math.random()*this.cols);
 				y = int(Math.random()*this.rows);
 				var num_obs:Number = int(Math.random()*((max_nodes_per - min_nodes_per) + min_nodes_per));
@@ -92,11 +94,8 @@ package astar{
 
 			// pick the lowest cost node on the open list
 			this.choice = this.open[0];
-			trace('picking next node from open list to try');
 			for(var i:Number = 1; i < this.open.length; i++){
-				trace(open[i].cost_plus_guess);
 				this.choice = choice.cost_plus_guess > open[i].cost_plus_guess ? open[i] : choice;
-				this.choice.state = AStarNode.PATH;
 			}
 
 			if(this.choice == this.dest) this.finished_finding();
