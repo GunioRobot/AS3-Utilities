@@ -95,7 +95,7 @@ package astar{
 		}
 
 		private function find_path_frame(e:Event):void{
-			if(this.open.length == 0) this.finished_finding();
+			if(this.open.length == 0) return this.finished_finding();
 
 			// pick the lowest cost node on the open list
 			this.choice = this.open[0];
@@ -103,7 +103,7 @@ package astar{
 				this.choice = choice.cost_plus_guess > open[i].cost_plus_guess ? open[i] : choice;
 			}
 
-			if(this.choice == this.dest) this.finished_finding();
+			if(this.choice == this.dest) return this.finished_finding();
 
 			for(i = 0; i < this.open.length; i++){
 				if(this.open[i] == this.choice){
@@ -126,7 +126,7 @@ package astar{
 					}
 				} else { // unseen noders
 					this.neighbor.parent_node = this.choice;
-					this.neighbor.guess_to_dest = this.manhattan_dist(new Point(this.neighbor.cell_x,this.neighbor.cell_y), new Point(this.dest.cell_x, this.dest.cell_y))*10;
+					this.neighbor.guess_to_dest = this.manhattan_dist(new Point(this.neighbor.cell_x,this.neighbor.cell_y), new Point(this.dest.cell_x, this.dest.cell_y))*25;
 					this.neighbor.state = AStarNode.OPEN_LIST;
 					this.open.push(this.neighbor);
 				}
