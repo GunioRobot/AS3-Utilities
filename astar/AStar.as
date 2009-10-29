@@ -31,14 +31,19 @@ package astar{
 			this.addEventListener(MouseEvent.CLICK, take_a_walk);
 		}
 
-		private function take_a_walk(e:Event):void{
-			var orig_point:Point = new Point(int(Math.random()*this.cols),int(Math.random()*this.rows));
-			var dest_point:Point = new Point(int(Math.random()*this.cols),int(Math.random()*this.rows));
-			this.dest = this.node_grid[dest_point.x][dest_point.y];
-			this.origin = this.node_grid[orig_point.x][orig_point.y];
-			dest.state = AStarNode.DEST;
-			origin.state = AStarNode.ORIGIN;
-			this.find_path(origin,dest);
+		private function take_a_walk(e:MouseEvent):void{
+			if(this.hasEventListener(Event.ENTER_FRAME)) return;
+
+			if( this.origin == null){
+				var orig_point:Point = new Point(int(e.stageX / this.node_size),int(e.stageY / node_size));
+				this.origin = this.node_grid[orig_point.x][orig_point.y];
+				origin.state = AStarNode.ORIGIN;
+			} else {
+				var dest_point:Point = new Point(int(e.stageX / this.node_size),int(e.stageY / this.node_size));
+				this.dest = this.node_grid[dest_point.x][dest_point.y];
+				dest.state = AStarNode.DEST;
+				this.find_path(origin,dest);
+			}
 		}
 
 
@@ -133,6 +138,7 @@ package astar{
 			for(var node:AStarNode = this.dest; node != null && !node.in_state(AStarNode.ORIGIN); node = node._parent){
 				try{node.state = AStarNode.PATH;}catch(e:Error){}
 			}
+			this.dest = this.origin = null;
 		}
 
 		private function get_neighbors(n:AStarNode, options:Object=null):Array{
