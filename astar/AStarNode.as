@@ -1,5 +1,7 @@
 package astar{
+	import common.TU;
 	import common.Utils;
+
 	import flash.events.Event;
 	import flash.display.Sprite;
 	import flash.text.TextField;
@@ -12,10 +14,8 @@ package astar{
 		public var cell_x:Number;
 		public var cell_y:Number;
 		public var _parent:AStarNode;
+		public var show_fgh:Boolean;
 
-		private var _is_dest:Boolean;
-		private var _is_origin:Boolean;
-		private var _walkable:Boolean;
 		private var _state:String;
 
 		// display states
@@ -60,9 +60,11 @@ package astar{
 
 		public function AStarNode(options:Object=null){
 			options = Utils.defaults(options,{
-				state : AStarNode.OPEN,
-				size: 10
+				'state' : AStarNode.OPEN,
+				'size' : 10,
+				'show_fgh' : false
 			});
+			this.show_fgh = options.show_fgh;
 			this.size = options.size;
 			this.state = options.state;
 		}
@@ -92,6 +94,16 @@ package astar{
 					: this.size;
 				this.graphics.lineTo(x,y);
 			}
+			if(this.show_fgh){
+				var text:String = "o: " + this.cost_from_origin +
+					"d: " + this.guess_to_dest +
+					"s: " + this.cost_plus_guess;
+				this.addChild(TU.text_field({
+					'text' : text,
+					'multiline' : true,
+					'format' : { 'color' : 0xFFFFFF }
+				}));
+			}
 		}
 
 		public function get walkable():Boolean{
@@ -99,7 +111,7 @@ package astar{
 		}
 
 		public function get cost_plus_guess():Number{
-			return this.cost_from_origin + guess_to_dest;
+			return this.cost_from_origin + this.guess_to_dest;
 		}
 
 		public function get parent_node():AStarNode{

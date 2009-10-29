@@ -1,5 +1,5 @@
-package{
-	import Utils;
+package astar{
+	import common.Utils;
 	import flash.events.Event;
 	import flash.display.Sprite;
 	import flash.text.TextField;
@@ -61,7 +61,7 @@ package{
 		public function AStarNode(options:Object=null){
 			options = Utils.defaults(options,{
 				state : AStarNode.OPEN,
-				size: 30
+				size: 10
 			});
 			this.size = options.size;
 			this.state = options.state;
@@ -75,7 +75,10 @@ package{
 			this.graphics.drawRect(0,0,this.size,this.size);
 			this.graphics.endFill();
 			if(this.parent_node != null){
-				this.graphics.lineStyle(.3, 0x0, .5);
+				this.graphics.beginFill(0xFFFFFF,.5);
+				this.graphics.drawCircle(this.size/2,this.size/2,2);
+				this.graphics.endFill();
+				this.graphics.lineStyle(.3, 0xFFFFFF, .5);
 				this.graphics.moveTo(this.size/2, this.size/2);
 				var x:Number = this.cell_x <= this.parent_node.cell_x
 					? (this.cell_x < this.parent_node.cell_x
@@ -89,10 +92,6 @@ package{
 					: this.size;
 				this.graphics.lineTo(x,y);
 			}
-			var tf:TextField = new TextField();
-			tf.text=String(this.cost_plus_guess);
-			try{this.removeChildAt(0);}catch(e:Error){}
-			this.addChild(tf);
 		}
 
 		public function get walkable():Boolean{

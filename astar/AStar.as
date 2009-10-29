@@ -100,7 +100,8 @@ package astar{
 			// pick the lowest cost node on the open list
 			this.choice = this.open[0];
 			for(var i:Number = 1; i < this.open.length; i++){
-				this.choice = choice.cost_plus_guess > open[i].cost_plus_guess ? open[i] : choice;
+//				this.choice = choice.cost_plus_guess > open[i].cost_plus_guess ? open[i] : choice;
+				this.choice = choice.guess_to_dest > open[i].guess_to_dest ? open[i] : choice;
 			}
 
 			if(this.choice == this.dest) return this.finished_finding();
