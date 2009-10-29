@@ -7,13 +7,14 @@ package astar{
 	import common.Utils;
 	import astar.AStarNode;
 
+	[SWF(width='1300', height='800', framerate='30')]
+
 	public class AStar extends MovieClip{
 
-		[SWF(width='1000', height='600', framerate='30')]
 
 		public var nodes:Array; // 1d array of nodes
 		public var node_grid:Array; // 2d array of nodes
-		public const node_size:Number = 10;
+		public const node_size:Number = 30;
 
 		private	var cols:Number;
 		private var rows:Number;
@@ -57,7 +58,7 @@ package astar{
 			for(var x:Number = 0; x < this.cols; x++){
 				this.node_grid[x] = [];
 				for(var y:Number = 0; y < this.rows; y++){
-					node = new AStarNode({size:this.node_size});
+					node = new AStarNode({size:this.node_size, 'show_fgh':true});
 					node.cell_x = x;
 					node.cell_y = y;
 					node.x = x*this.node_size;

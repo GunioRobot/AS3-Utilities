@@ -41,7 +41,7 @@ package astar{
 				alpha: .1
 			},
 			"Closed_list":{
-				color: 0x555555,
+				color: 0x222222,
 				alpha: .8
 			},
 			"Path":{
@@ -49,11 +49,11 @@ package astar{
 				alpha: .6
 			},
 			"Open":{
-				color: 0x594234,
+				color: 0x0,
 				alpha: 1
 			},
 			"Closed":{
-				color: 0x332211,
+				color: 0x6699CC,
 				alpha: 1
 			}
 		}
@@ -76,7 +76,7 @@ package astar{
 			this.graphics.beginFill(options.color, 1);
 			this.graphics.drawRect(0,0,this.size,this.size);
 			this.graphics.endFill();
-			if(this.parent_node != null){
+			if(this.parent_node != null && false){
 				this.graphics.beginFill(0xFFFFFF,.5);
 				this.graphics.drawCircle(this.size/2,this.size/2,2);
 				this.graphics.endFill();
@@ -95,13 +95,17 @@ package astar{
 				this.graphics.lineTo(x,y);
 			}
 			if(this.show_fgh){
+				try{this.removeChildAt(0);}catch(e:Error){}
 				var text:String = "o: " + this.cost_from_origin +
-					"d: " + this.guess_to_dest +
-					"s: " + this.cost_plus_guess;
+					"\nd: " + this.guess_to_dest +
+					"\ns: " + this.cost_plus_guess;
 				this.addChild(TU.text_field({
 					'text' : text,
 					'multiline' : true,
-					'format' : { 'color' : 0xFFFFFF }
+					'format' : {
+						'color' : 0xFFFFFF,
+						'size' : 8
+					 }
 				}));
 			}
 		}
