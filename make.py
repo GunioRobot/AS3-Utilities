@@ -44,7 +44,7 @@ if __name__ == "__main__":
 		root = root != '.' and root+'/' or ''
 		for f in [f for f in files if isDotAS(f)]:
                 	if os.stat(root + f).st_mtime > swf_time:
-                                dont_open_swf = os.system(command) == -1 and True or False
+                                dont_open_swf = os.system(command) > 0 and True or False
 				break;
                 if dont_open_swf != keep_looking:
 			break
