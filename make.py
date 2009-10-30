@@ -19,7 +19,7 @@ if len(sys.argv) == 1:
 	else:
 		raise Exception("Either no .as files were found or multiple were. Please specify one as a command line argument.")
 else:
-	src = sys.argv[1]
+	src_file = sys.argv[1]
 
 target = swf_dir + src[:-3] + '.swf'
 command = ' '.join([cc, flags, '-o ' + target, src])
@@ -27,4 +27,4 @@ command = ' '.join([cc, flags, '-o ' + target, src])
 
 if __name__ == "__main__":
 	os.system(command)
-	os.system('open ' + target_file)
+	os.system('open ' + target)
