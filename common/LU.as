@@ -1,68 +1,100 @@
 package common{
 
+	import flash.utils.*;
+	import flash.sampler.*;
+
 	// Language Utilities
 	public class LU{
 
-                /* for each property of obj2 undefined in obj1, copy the key/value pair to obj1 (recursively) */
-                public static function defaults(obj1:Object, obj2:Object):Object{
-                        if(obj1 === null){ return obj2; }
-			if(obj2 === null){ return obj1; }
+                /* copy all properties of 'passed' into a copy of 'defaults' */
+		/* treats properties that are objects recursively */
+		/* returns a new object, leaving both arguments unmodified */
+                public static function defaults(defaults:Object, passed:Object):Object{
+			defaults = (defaults === null)
+				? {}
+				: LU.copy(defaults);
 
-                        for(var key:String in obj2){
-				if(obj1[key] is Object){
-					obj1[key] = Utils.defaults(obj1[key],obj2[key]);
-				} else if(obj1[key] === undefined){
-                                        obj1[key] = obj2[key];
+			if(passed === null) return defaults;
+
+                        for(var key:String in passed){
+				if(passed[key] is Object){
+					defaults[key] = LU.defaults(defaults[key], passed[key]);
+				} else{
+                                        defaults[key] = passed[key];
                                 }
                         }
-                        return obj1;
+			return defaults;
                 }
 
-		public static function trace(... args):void{
+		/* return a recursive copy of an object */
+		public static function copy(o:Object):Object{
+			var nu:Object = {}
+			for(var x:String in o){
+				if(getQualifiedClassName(o[x]) == getQualifiedClassName(nu)) nu[x] = LU.copy(o[x]);
+				else nu[x] = o[x];
+			}
+			return nu;
+		}
+
+		public static function print(... args):void{
 			var str:String = '';
 			for(var i:Number = 0; i < args.length; i++){
-				str += Utils.to_str(args[i]);
+				str += LU.to_str(args[i]);
 			}
+			trace(str);
 		}
 
 		public static function arr_to_str(a:Array, options:Object=null):String{
-			options = Utils.defaults(options,{
+			options = LU.defaults(options,{
 				sep : ', '
 			});
 			var str:String = "[";
 			for(var i:Number = 0; i < a.length; i++){
-				str += Utils.to_str(a[i]) + options.sep;
+				str += LU.to_str(a[i]) + options.sep;
 			}
 			str += ']';
 			return str;
 		}
 
-		public static function to_str(x:*):String{
-			if(x is Object){
-				return Utils.obj_to_str(x);
-			} else if(x is Array){
-				return Utils.arr_to_str(x);
-			} else if(x is String){
-				return x;
-			} else {
-				try{
+		public static function to_str(x:*, options:Object=null):String{
+//			trace('converting', getQualifiedClassName(x), 'to str');
+			switch(true){
+				case x is Array:
+//					trace('\tarray')
+					return LU.arr_to_str(x, options);
+				case x is String:
+//					trace('\tstring');
+					return x;
+				case x is Number:
+//					trace('\tnumber');
 					return x.toString();
-				} catch (e:Error){
-					return 'cannot convert object to string';
-				}
+				case x is StackFrame:
+//					trace('\tstackframe');
+					return x.name;
+				case x is Object:
+//					trace('\tobject');
+					return LU.obj_to_str(x, options);
+				case x == null:
+					return 'null'
+				default:
+					return getQualifiedClassName(x) + ' is an unhandled type';
 			}
 			return 'o noes bad nues'; // shouldn't ever get here
 		}
 
 		public static function obj_to_str(o:Object, options:Object=null):String{
-			if(o == null){ return ''; }
-			options = Utils.defaults(options, {
-				key_val_sep : ' : ',
-				entry_sep : '\n'
+			if(o == null){ return 'null'; }
+			options = LU.defaults(options, {
+				'tabs' : -1,
+				'key_val_sep' : ' : ',
+				'entry_sep' : '\n'
 			});
+			trace('entry sep: ', options.entry_sep);
+			options.tabs++;
+			var tabs:String = ''; for(var i:Number = 0; i < options.tabs; i++){ tabs += '\t'; }
 			var str:String = '';
 			for(var x:String in o){
-				str += x + options.key_val_sep + o[x] + options.entry_sep;
+				str += x + options.key_val_sep + LU.to_str(o[x],options) + options.entry_sep;
 			}
 			return str;
 		}
