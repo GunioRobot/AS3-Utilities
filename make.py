@@ -28,7 +28,7 @@ if len(sys.argv) == 1:
 	else:
 		raise Exception(len(as_files),".as files were found. Please specify one as a command line argument.")
 else:
-	src_file = sys.argv[1]
+	src = sys.argv[1]
 
 target = swf_dir + src[:-3] + '.swf'
 command = ' '.join([cc, flags, '-o ' + target, src])
@@ -38,16 +38,22 @@ if __name__ == "__main__":
         # compare last modified times of the swf and source files
         # to determine if recompilation is necessary
 	# (checks all .as files in subdirs)
-	swf_time = os.stat(target).st_mtime
-	dont_open_swf = keep_looking = 'dont do it'
-	for root,dirs,files in os.walk("."):
-		root = root != '.' and root+'/' or ''
-		for f in [f for f in files if isDotAS(f)]:
-                	if os.stat(root + f).st_mtime > swf_time:
-                                dont_open_swf = os.system(command) > 0 and True or False
-				break;
-                if dont_open_swf != keep_looking:
-			break
+	try:
+		swf_time = os.stat(target).st_mtime
+		dont_open_swf = keep_looking = 'dont do it'
+		for root,dirs,files in os.walk("."):
+			root = root != '.' and root+'/' or ''
+			for f in [f for f in files if isDotAS(f)]:
+	                	if os.stat(root + f).st_mtime > swf_time:
+	                                dont_open_swf = os.system(command) > 0 and True or False
+					break;
+	                if dont_open_swf != keep_looking:
+				break
+	# run when os.stat(target) fails because target doesn't exist
+        except:
+		os.system(command)
+
 	dont_open_swf != True and os.system('open ' + target)
+
 
 

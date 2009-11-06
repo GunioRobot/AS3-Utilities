@@ -17,7 +17,7 @@ package common{
 			if(passed === null) return defaults;
 
                         for(var key:String in passed){
-				if(passed[key] is Object){
+				if(getQualifiedClassName(passed[key]) == getQualifiedClassName({})){
 					defaults[key] = LU.defaults(defaults[key], passed[key]);
 				} else{
                                         defaults[key] = passed[key];

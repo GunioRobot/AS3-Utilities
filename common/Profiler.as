@@ -16,10 +16,9 @@ package common{
 		private static const NAME:String = 'name';
 
 		public static function nouveau(options:Object=null):Profiler{
-			options = LU.defaults(options, {
+			options = LU.defaults({
 				'start_profiling' : true
-			});
-//			LU.print(options);
+			}, options);
 			if(_instance == null)
 				return new Profiler(options.start_profiling)
 			return _instance;
@@ -55,9 +54,8 @@ package common{
 			var sum:Number = 0;
 			for each(var f:Object in _get_functions()){
 				sum += f[Profiler.EXEC_PERCENT];
-				trace(f[Profiler.EXEC_TIME]/1000, '\t\t',int(f[Profiler.EXEC_PERCENT]*1000),'\t\t', f[NAME]);
+				trace((f[Profiler.EXEC_TIME]/1000).toFixed(1)+'ms\t\t', int(f[Profiler.EXEC_PERCENT]*100) + '%\t\t', f[NAME]);
 			}
-			trace('total percent: ', sum);
 		}
 
 		// returns an array of the objects in _func_info, sorted in descending order of running time
@@ -89,6 +87,11 @@ package common{
 
 		public function stop():void{
 			stopSampling();
+		}
+
+		public function print_and_stop():void{
+			this.print();
+			this.stop();
 		}
 	}
 }
